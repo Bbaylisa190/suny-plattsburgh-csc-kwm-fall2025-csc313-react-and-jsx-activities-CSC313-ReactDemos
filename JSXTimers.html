@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>JSX Demo Timer</title>
+  <title>JSX Demo Kitchen Timer</title>
   <meta charset="utf-8" />
 </head>
 <body>
@@ -10,51 +10,42 @@
   <script src="react/react.js"></script>
   <script src="react/react-dom.js"></script>
   <script src="react/babel.js"></script>
+
   <script type="text/babel">
+    function Timer({ title, speed }) {
+      const [time, setTime] = React.useState(0);
+      const [running, setRunning] = React.useState(false);
 
-    function Counter({ start }) {
-        const [counter, setCounter] = React.useState(start);
+      React.useEffect(() => {
+        if (!running) return;
+        const interval = setInterval(() => {
+          setTime((t) => t + 1);
+        }, speed);
+        return () => clearInterval(interval);
+      }, [running, speed]);
 
-	React.useEffect(() => {
-            const tickTock = () => {
-		setCounter((value) => value + 1);
-            }
-	    
-            const timer = setInterval(tickTock, 1000);
-
-	    return () => {
-		clearInterval(timer);
-	    };
-
-	}, []);  // [] tells it to only run once
-	    
-        return (
-	   <main>
-	      <p>Counter: {counter}</p>
-		<button onClick={() => setCounter(0)}>
-	          Reset
-              </button>
-	   </main>
-	);
+      return (
+        <main style={{ border: "1px solid #ccc", margin: "10px", padding: "10px" }}>
+          <h2>{title}</h2>
+          <p>Time: {time}</p>
+          <button onClick={() => setRunning(true)}>Start</button>
+          <button onClick={() => setRunning(false)}>Pause</button>
+          <button onClick={() => setTime(0)}>Reset</button>
+        </main>
+      );
     }
 
     function App() {
       return (
         <div>
-          <Counter start={0} />
-          <Counter start={123} />
-          <Counter start={-64} />
+          <Timer title="Boil Eggs (seconds)" speed={1000} />
+          <Timer title="Baking Bread (tenths)" speed={100} />
+          <Timer title="Slow Roast (minutes)" speed={60000} />
         </div>
       );
     }
 
-    ReactDOM.render(
-	    <React.StrictMode>
-            <App />
-	    </React.StrictMode>,
-	document.getElementById("root")
-    );
-
+    ReactDOM.render(<App />, document.getElementById("root"));
   </script>
 </body>
 </html>
