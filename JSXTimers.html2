@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>JSX Demo Kitchen Timer</title>
+  <meta charset="utf-8" />
+</head>
+<body>
+  <div id="root"></div>
+
+  <script src="react/react.js"></script>
+  <script src="react/react-dom.js"></script>
+  <script src="react/babel.js"></script>
+
+  <script type="text/babel">
+    function Timer({ title, speed }) {
+      const [time, setTime] = React.useState(0);
+      const [running, setRunning] = React.useState(false);
+
+      React.useEffect(() => {
+        if (!running) return;
+        const interval = setInterval(() => {
+          setTime((t) => t + 1);
+        }, speed);
+        return () => clearInterval(interval);
+      }, [running, speed]);
+
+      return (
+        <main style={{ border: "1px solid #ccc", margin: "10px", padding: "10px" }}>
+          <h2>{title}</h2>
+          <p>Time: {time}</p>
+          <button onClick={() => setRunning(true)}>Start</button>
+          <button onClick={() => setRunning(false)}>Pause</button>
+          <button onClick={() => setTime(0)}>Reset</button>
+        </main>
+      );
+    }
+
+    function App() {
+      return (
+        <div>
+          <Timer title="Boil Eggs (seconds)" speed={1000} />
+          <Timer title="Baking Bread (tenths)" speed={100} />
+          <Timer title="Slow Roast (minutes)" speed={60000} />
+        </div>
+      );
+    }
+
+    ReactDOM.render(<App />, document.getElementById("root"));
+  </script>
+</body>
+</html>
+
